@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Organizer GUI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+            background: #f7f7f8;
+            color: #222;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        h1, h2 { margin-top: 0; }
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        input[type="text"], select {
+            flex: 1;
+            min-width: 320px;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 8px 12px;
+            border: 1px solid #999;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #fff;
+        }
+        button.primary {
+            background: #2d6cdf;
+            color: #fff;
+            border-color: #2d6cdf;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th, td {
+            border-bottom: 1px solid #e5e5e5;
+            text-align: left;
+            padding: 8px 6px;
+            vertical-align: top;
+        }
+        .status-success { color: #1f7a1f; }
+        .status-error { color: #bf1b1b; }
+        .status-skipped { color: #7a6500; }
+        .small { color: #555; font-size: 13px; }
+        #result { margin-top: 8px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>File Organizer GUI</h1>
+
+    <div class="card">
+        <h2>Run Organizer</h2>
+        <div class="row">
+            <select id="presetDir">
+                <option value="">Select default directory (optional)</option>
+            </select>
+            <button id="applyPreset">Use Selected</button>
+        </div>
+        <div class="row">
+            <input id="directory" type="text" placeholder="Enter directory path (e.g., C:\\Users\\Admin2\\Videos\\Series)" />
+        </div>
+        <div class="row">
+            <label><input id="moveMedia" type="checkbox" /> Move media files to system folders (Downloads flow)</label>
+        </div>
+        <div class="row">
+            <button id="organizeBtn" class="primary">Organize Now</button>
+            <button id="checkLogsBtn">Check Logs</button>
+        </div>
+        <div id="result" class="small"></div>
+    </div>
+
+    <div class="card" id="logsSection">
+        <h2>Movement Logs</h2>
+        <div class="small">Tracks all move/rename/group operations with date and time.</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 180px;">Date/Time</th>
+                    <th style="width: 90px;">Status</th>
+                    <th style="width: 90px;">Action</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody id="logsBody"></tbody>
+        </table>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
