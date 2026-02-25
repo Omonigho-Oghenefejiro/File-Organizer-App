@@ -1,17 +1,20 @@
 {
   "name": "file-organizer-app",
   "version": "1.0.0",
-  "description": "A CLI tool to organize files in directories using Node.js.",
+  "description": "A file organizer with CLI and GUI, including timestamped movement logs.",
   "main": "index.js",
   "bin": {
     "file-organizer": "index.js"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js",
+    "cli": "node index.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.21.2",
+    "mime-types": "^3.0.1",
     "readline-sync": "^1.4.10"
   }
 }

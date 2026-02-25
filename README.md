@@ -1,26 +1,29 @@
 # File Organizer App
 Built Solely by Omonigho-Okoro Oghenefejiro
-A Node.js CLI tool to organize files in directories. It can move, rename, and sort files based on file type or date.
+A Node.js file organizer with both CLI and GUI. It moves, renames, and sorts files by type/series and keeps timestamped movement logs.
 
 ## Features
-- Organize files by type or date
-- Move files to specified folders
-- Rename files
-- Sort files into subfolders
+- Organize files by type
+- Organize series into `Series Name/Season XX` folders
+- Standardize episode names to `Series Name S01E01.ext`
+- Move media files to system folders (optional)
+- Log every movement/rename with date and time
+- View logs in GUI
 
 ## Usage
 1. Install dependencies: `npm install`
-2. Run the app: `node index.js`
 
-## Planned Commands
-- organize: Organize files in a directory
-- move: Move files to a folder
-- rename: Rename files
+### Run GUI
+- Start server: `npm start`
+- Open: `http://localhost:3000`
+- Use the form to run organization and view movement logs.
 
-## Example
-```
-node index.js organize --dir "C:/Users/Example/Downloads"
-```
+### Run CLI
+- Start CLI mode: `npm run cli`
 
----
-This is a CLI-only app. No frontend is included.
+## Logs
+- Logs are stored in `organizer-logs.jsonl`.
+- Each entry includes timestamp, action, status, source path, destination path, and message.
+
+## Example Episode Rename
+- `The.Office.s1e1.mkv` becomes `The Office S01E01.mkv`
