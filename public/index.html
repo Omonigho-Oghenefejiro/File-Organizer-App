@@ -3,105 +3,442 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>File Organizer GUI</title>
+    <title>File Organizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #141829;
+            --bg-tertiary: #1a1f3a;
+            --accent-primary: #6366f1;
+            --accent-secondary: #10b981;
+            --accent-danger: #ef4444;
+            --accent-warning: #f59e0b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border-color: #2d3748;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 24px;
-            background: #f7f7f8;
-            color: #222;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0f1a35 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
         }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+        }
+
         .card {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        h1, h2 { margin-top: 0; }
+
+        .card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.1);
+        }
+
+        .card h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .card-description {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            margin-bottom: 1.5rem;
+        }
+
         .row {
             display: flex;
-            gap: 12px;
+            gap: 1rem;
             flex-wrap: wrap;
-            margin-bottom: 12px;
+            margin-bottom: 1.25rem;
         }
-        input[type="text"], select {
+
+        .row-last {
+            margin-bottom: 0;
+        }
+
+        input[type="text"],
+        select {
             flex: 1;
-            min-width: 320px;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            min-width: 280px;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
         }
+
+        input[type="text"]::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
         button {
-            padding: 8px 12px;
-            border: 1px solid #999;
-            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             cursor: pointer;
-            background: #fff;
+            background: transparent;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
+
+        button:hover {
+            border-color: var(--text-secondary);
+            background: var(--bg-tertiary);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
         button.primary {
-            background: #2d6cdf;
-            color: #fff;
-            border-color: #2d6cdf;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #4f46e5 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);
+            font-weight: 600;
         }
+
+        button.primary:hover {
+            background: linear-gradient(135deg, #5558e3 0%, #4338ca 100%);
+            box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
+            border-color: transparent;
+        }
+
+        button.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        button.secondary {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        button.secondary:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-wrapper:hover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-primary);
+        }
+
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-primary);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            animation: slideInLeft 0.3s ease;
+            min-height: 2rem;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 0.9rem;
         }
-        th, td {
-            border-bottom: 1px solid #e5e5e5;
+
+        thead {
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        th {
+            padding: 1rem;
             text-align: left;
-            padding: 8px 6px;
-            vertical-align: top;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .status-success { color: #1f7a1f; }
-        .status-error { color: #bf1b1b; }
-        .status-skipped { color: #7a6500; }
-        .small { color: #555; font-size: 13px; }
-        #result { margin-top: 8px; white-space: pre-wrap; }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        td {
+            padding: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-danger);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+        }
+
+        .status-skipped {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-warning);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            input[type="text"],
+            select {
+                min-width: 0;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>File Organizer GUI</h1>
+    <div class="container">
+        <header>
+            <h1>File Organizer</h1>
+            <p class="subtitle">Intelligently sort and organize your files with precision</p>
+        </header>
 
-    <div class="card">
-        <h2>Run Organizer</h2>
-        <div class="row">
-            <select id="presetDir">
-                <option value="">Select default directory (optional)</option>
-            </select>
-            <button id="applyPreset">Use Selected</button>
-        </div>
-        <div class="row">
-            <input id="directory" type="text" placeholder="Enter directory path (e.g., C:\\Users\\Admin2\\Videos\\Series)" />
-        </div>
-        <div class="row">
-            <label><input id="moveMedia" type="checkbox" /> Move media files to system folders (Downloads flow)</label>
-        </div>
-        <div class="row">
-            <button id="organizeBtn" class="primary">Organize Now</button>
-            <button id="checkLogsBtn">Check Logs</button>
-        </div>
-        <div id="result" class="small"></div>
-    </div>
+        <div class="card" style="animation-delay: 0.1s;">
+            <h2>Configure & Run</h2>
+            <p class="card-description">Select a directory and configure your organization preferences</p>
 
-    <div class="card" id="logsSection">
-        <h2>Movement Logs</h2>
-        <div class="small">Tracks all move/rename/group operations with date and time.</div>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 180px;">Date/Time</th>
-                    <th style="width: 90px;">Status</th>
-                    <th style="width: 90px;">Action</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Message</th>
-                </tr>
-            </thead>
-            <tbody id="logsBody"></tbody>
-        </table>
+            <div class="row">
+                <select id="presetDir">
+                    <option value="">Select default directory (optional)</option>
+                </select>
+                <button id="applyPreset" class="secondary">Use Selected</button>
+            </div>
+
+            <div class="row">
+                <input id="directory" type="text" placeholder="Enter directory path (e.g., C:\Users\Admin2\Videos\Series)" />
+            </div>
+
+            <div class="row">
+                <label class="checkbox-wrapper">
+                    <input id="moveToSystemFolders" type="checkbox" />
+                    <span>Move images & videos to system folders (Pictures/Videos)</span>
+                </label>
+            </div>
+
+            <div class="row">
+                <label class="checkbox-wrapper">
+                    <input id="moveMedia" type="checkbox" />
+                    <span>Organize series files by season</span>
+                </label>
+            </div>
+
+            <div class="row">
+                <label class="checkbox-wrapper">
+                    <input id="dryRun" type="checkbox" />
+                    <span>Preview only (dry-run, no file changes)</span>
+                </label>
+            </div>
+
+            <div class="row">
+                <input id="includeExtensions" type="text" placeholder="Include only extensions (optional, e.g. mp4,mkv,pdf)" />
+            </div>
+
+            <div class="row">
+                <input id="excludeExtensions" type="text" placeholder="Exclude extensions (optional, e.g. tmp,log)" />
+            </div>
+
+            <div class="row">
+                <input id="excludeNames" type="text" placeholder="Exclude names (optional, e.g. .git,node_modules)" />
+            </div>
+
+            <div class="row row-last">
+                <button id="organizeBtn" class="primary">Start Organization</button>
+                <button id="checkLogsBtn" class="secondary">View Logs</button>
+                <button id="undoBtn" class="secondary">Undo Last Run</button>
+            </div>
+
+            <div id="result"></div>
+        </div>
+
+        <div class="card" id="logsSection" style="animation-delay: 0.2s;">
+            <h2>Activity Logs</h2>
+            <p class="card-description">Real-time tracking of all file movements, renames, and grouping operations</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">Date & Time</th>
+                        <th style="width: 100px;">Status</th>
+                        <th style="width: 100px;">Action</th>
+                        <th>Source Path</th>
+                        <th>Destination</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="logsBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <script src="/app.js"></script>

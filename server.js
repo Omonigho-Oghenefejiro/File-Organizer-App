@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const {
     organizeByType,
+    undoLastRun,
     getDefaultDirs,
     getLogs,
     defaultLogFilePath
@@ -25,7 +26,11 @@ app.get('/api/logs', (req, res) => {
 app.post('/api/organize', (req, res) => {
     try {
         const targetDirectory = (req.body.directory || '').trim();
-        const moveMedia = Boolean(req.body.moveMedia);
+        const moveToSystemFolders = Boolean(req.body.moveToSystemFolders);
+        const dryRun = Boolean(req.body.dryRun);
+        const includeExtensions = req.body.includeExtensions || [];
+        const excludeExtensions = req.body.excludeExtensions || [];
+        const excludeNames = req.body.excludeNames || [];
 
         if (!targetDirectory) {
             return res.status(400).json({ error: 'Directory is required.' });
@@ -36,7 +41,11 @@ app.post('/api/organize', (req, res) => {
             : path.resolve(targetDirectory);
 
         const result = organizeByType(resolvedDirectory, {
-            moveMedia,
+            moveToSystemFolders,
+            dryRun,
+            includeExtensions,
+            excludeExtensions,
+            excludeNames,
             logger: () => {}
         });
 
@@ -44,6 +53,23 @@ app.post('/api/organize', (req, res) => {
             directory: resolvedDirectory,
             result
         });
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+});
+
+app.post('/api/undo-last-run', (req, res) => {
+    try {
+        const dryRun = Boolean(req.body.dryRun);
+        const runId = (req.body.runId || '').trim() || null;
+
+        const result = undoLastRun({
+            dryRun,
+            runId,
+            logger: () => {}
+        });
+
+        return res.json(result);
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
