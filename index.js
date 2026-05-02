@@ -26,6 +26,9 @@ defaultDirs.simpsons = 'C:\\Users\\Admin2\\Videos\\Series\\The Simpsons';
 const moveToSystemFoldersInput = readline.question('When organizing Downloads folder, move images to Pictures and videos to Videos? (y/N): ');
 moveToSystemFolders = moveToSystemFoldersInput.trim().toLowerCase() === 'y';
 
+const moveMediaInput = readline.question('Organize series files by season? (y/N): ');
+const moveMedia = moveMediaInput.trim().toLowerCase() === 'y';
+
 const dryRunInput = readline.question('Run in preview mode (dry-run, no files moved)? (y/N): ');
 const dryRun = dryRunInput.trim().toLowerCase() === 'y';
 
@@ -65,6 +68,7 @@ if (confirm.trim().toLowerCase() === 'y') {
     try {
         const result = organizeByType(targetDir, {
             moveToSystemFolders,
+            moveMedia,
             dryRun,
             includeExtensions,
             excludeExtensions,

@@ -94,10 +94,8 @@ async function organizeDirectory() {
     resultBox.textContent = '⏳ Running organizer...';
 
     try {
-        const moveToSystemFolders = Boolean(
-            (moveToSystemFoldersInput && moveToSystemFoldersInput.checked) ||
-            (moveMediaInput && moveMediaInput.checked)
-        );
+        const moveToSystemFolders = Boolean(moveToSystemFoldersInput && moveToSystemFoldersInput.checked);
+        const moveMedia = Boolean(moveMediaInput && moveMediaInput.checked);
         const dryRun = Boolean(dryRunInput && dryRunInput.checked);
 
         const parseList = value => (value || '')
@@ -115,6 +113,7 @@ async function organizeDirectory() {
             body: JSON.stringify({
                 directory,
                 moveToSystemFolders,
+                moveMedia,
                 dryRun,
                 includeExtensions,
                 excludeExtensions,

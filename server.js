@@ -27,6 +27,7 @@ app.post('/api/organize', (req, res) => {
     try {
         const targetDirectory = (req.body.directory || '').trim();
         const moveToSystemFolders = Boolean(req.body.moveToSystemFolders);
+        const moveMedia = Boolean(req.body.moveMedia);
         const dryRun = Boolean(req.body.dryRun);
         const includeExtensions = req.body.includeExtensions || [];
         const excludeExtensions = req.body.excludeExtensions || [];
@@ -42,6 +43,7 @@ app.post('/api/organize', (req, res) => {
 
         const result = organizeByType(resolvedDirectory, {
             moveToSystemFolders,
+            moveMedia,
             dryRun,
             includeExtensions,
             excludeExtensions,

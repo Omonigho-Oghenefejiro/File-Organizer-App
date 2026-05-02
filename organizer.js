@@ -582,6 +582,7 @@ function organizeByType(dir, inputOptions = {}) {
     const options = normalizeOptions(inputOptions);
     const {
         moveToSystemFolders = false,
+        moveMedia = false,
         selectedVideosPath = videosPath,
         selectedPicturesPath = picturesPath,
         logFilePath = defaultLogFilePath,
@@ -614,7 +615,16 @@ function organizeByType(dir, inputOptions = {}) {
     const isSubfolderOfVideos = dir.toLowerCase().startsWith(selectedVideosPath.toLowerCase());
     let result;
 
-    if (isSubfolderOfVideos && !isRootVideosFolder) {
+    if (moveMedia) {
+        result = groupBySeason(dir, {
+            ...options,
+            logFilePath,
+            logger,
+            dryRun,
+            runId,
+            preview
+        });
+    } else if (isSubfolderOfVideos && !isRootVideosFolder) {
         result = groupBySeason(dir, {
             ...options,
             logFilePath,
