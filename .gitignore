@@ -12,6 +12,9 @@ organizer-logs.jsonl
 .env
 .env.local
 
+# Config (contains personal paths)
+config.json
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -30,3 +33,5 @@ build/
 # Temporary files
 tmp/
 temp/
+test_organize.js
+test_series/

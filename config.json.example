@@ -1,0 +1,5 @@
+{
+  "customDirs": {
+    "example_series": "/path/to/your/series/folder"
+  }
+}

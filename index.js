@@ -3,6 +3,17 @@ const path = require('path');
 const readline = require('readline-sync');
 const { organizeByType, undoLastRun, getDefaultDirs } = require('./organizer');
 
+// Load custom directories from config
+let customDirs = {};
+if (fs.existsSync(path.join(__dirname, 'config.json'))) {
+    try {
+        const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
+        customDirs = config.customDirs || {};
+    } catch (e) {
+        console.warn('Warning: Could not parse config.json');
+    }
+}
+
 const action = readline.question('Choose action: [o]rganize or [u]ndo last run? (o/u): ').trim().toLowerCase();
 
 if (action === 'u') {
@@ -21,13 +32,17 @@ if (action === 'u') {
 let moveToSystemFolders = false;
 
 const defaultDirs = getDefaultDirs();
-defaultDirs.simpsons = 'C:\\Users\\Admin2\\Videos\\Series\\The Simpsons';
+Object.assign(defaultDirs, customDirs);
 
 const moveToSystemFoldersInput = readline.question('When organizing Downloads folder, move images to Pictures and videos to Videos? (y/N): ');
 moveToSystemFolders = moveToSystemFoldersInput.trim().toLowerCase() === 'y';
 
 const moveMediaInput = readline.question('Organize series files by season? (y/N): ');
 const moveMedia = moveMediaInput.trim().toLowerCase() === 'y';
+
+if (moveMedia) {
+    console.log('Note: Files matching series patterns (S##E## or #x##) will be organized into Season folders.');
+}
 
 const dryRunInput = readline.question('Run in preview mode (dry-run, no files moved)? (y/N): ');
 const dryRun = dryRunInput.trim().toLowerCase() === 'y';
@@ -38,7 +53,7 @@ const excludeNamesInput = readline.question('Exclude names (comma-separated, opt
 
 const parseList = value => value
     .split(',')
-    .map(item => item.trim())
+    .map(item => item.trim().replace(/^\./, ''))  // strip leading dots
     .filter(Boolean);
 
 const includeExtensions = includeInput ? parseList(includeInput) : [];

@@ -249,7 +249,8 @@ function extractSeriesName(filename) {
         return sanitizeSeriesName(seriesWithQuality);
     }
 
-    return 'Unknown Series';
+    // Fallback: use the sanitized filename stem instead of generic "Unknown Series"
+    return sanitizeSeriesName(baseName);
 }
 
 function extractSeasonEpisode(filename) {
@@ -323,25 +324,13 @@ function safeRenameForSeries(oldPath, newPath, operation = 'group', logFilePath 
                 return false;
             }
 
+            // Handle collision: use counter pattern ((1), (2), etc)
             const parsed = path.parse(finalPath);
-            const originalNameWithoutExt = path.basename(oldPath, path.extname(oldPath));
-            const suffixMatch = originalNameWithoutExt.match(/\s+(.*?)$/);
-            const suffix = suffixMatch ? suffixMatch[1] : null;
-
-            if (suffix && suffix.length < 50) {
-                const withSuffixPath = path.join(parsed.dir, `${parsed.name} ${suffix}${parsed.ext}`);
-                if (!fs.existsSync(withSuffixPath)) {
-                    finalPath = withSuffixPath;
-                }
-            }
-
-            if (fs.existsSync(finalPath)) {
-                let counter = 1;
+            let counter = 1;
+            finalPath = path.join(parsed.dir, `${parsed.name} (${counter})${parsed.ext}`);
+            while (fs.existsSync(finalPath)) {
+                counter += 1;
                 finalPath = path.join(parsed.dir, `${parsed.name} (${counter})${parsed.ext}`);
-                while (fs.existsSync(finalPath)) {
-                    counter += 1;
-                    finalPath = path.join(parsed.dir, `${parsed.name} (${counter})${parsed.ext}`);
-                }
             }
         }
 
@@ -452,6 +441,18 @@ function groupBySeason(dir, options = {}) {
         }
 
         if (!season) {
+            // Log skipped file for auditing
+            appendLog(
+                {
+                    runId: options.runId || null,
+                    action: 'skip',
+                    status: 'skipped',
+                    source: path.join(dir, file),
+                    destination: null,
+                    message: `File does not match series pattern: ${file}`
+                },
+                logFilePath
+            );
             return;
         }
 
